@@ -27,45 +27,43 @@ AddEventHandler("FRP:CREATOR:FirstSpawn", function()
         Wait(2000)               
         TriggerEvent('FRP:CREATOR:StartNotify')
         FirstSpawn = true
+        N_0x69d65e89ffd72313(true)
+        SetCinematicModeActive(1)
+        while true do
+            Wait(10)
+            if FirstSpawn then	
+                local pcoords = GetEntityCoords(PlayerPedId())                
+                local dst = #(coordsSpawn - pcoords)	   
+                if dst < 5 then
+                    RemovePedFromGroup(ped, GetPedGroupIndex(PlayerPedId()))
+                    Wait(100)
+                    DisableAllControlActions(0)                  
+                    NetworkSetEntityInvisibleToNetwork(PlayerPedId(), false)
+                    SetEntityInvincible(PlayerPedId(), false)  
+                    SetCinematicModeActive(0)                    
+                    FirstSpawn = false
+                    N_0x69d65e89ffd72313(false)    
+                    Wait(1000)
+                    TaskLeaveVehicle(PlayerPedId(), car, 0, 0) 
+                    Wait(2000)                         
+                    TaskVehicleDriveToCoord(ped, GetVehiclePedIsIn(ped, false), 2600.436,-1205.932,53.323, 10.0, 1.0, GetEntityModel(GetVehiclePedIsIn(PlayerPedId())), 67633207, 5.0, false)
+                    TriggerEvent('FRP:NOTIFY:Simple', 'Você perdeu todas as suas roupas, tem uma loja de roupa do outro lado da rua, que tal ir lá se trocar?', 10000)
+                    TriggerMusicEvent("MC_MUSIC_STOP")                    
+                    Wait(10000)
+                    --  TriggerEvent('FRP:NOTIFY:Simple', 'Digite /guiainiciante ver o Jornal Guia de Iniciante.', 10000)
+                    DeleteVehicle(car)
+                    Citizen.InvokeNative(0x971D38760FBC02EF, ped, false)
+                    DeleteEntity(ped)
+                    break
+                else               
+                    DisableAllControlActions(1)
+                end 
+            end	
+        end
     else            
         TriggerEvent('FRP:CREATOR:StartNotify')            
         SetEntityCoords(PlayerPedId(), Config.FirstSpawnCoords)
         FirstSpawn = false
-    end
-end)
-
-Citizen.CreateThread(function()
-    while true do
-        Wait(10)
-        if FirstSpawn then	
-            local pcoords = GetEntityCoords(PlayerPedId())                
-            local dst = #(coordsSpawn - pcoords)	   
-            if dst < 5 then
-                RemovePedFromGroup(ped, GetPedGroupIndex(PlayerPedId()))
-                Wait(100)
-                DisableAllControlActions(0)                  
-                NetworkSetEntityInvisibleToNetwork(PlayerPedId(), false)
-                SetEntityInvincible(PlayerPedId(), false)  
-                SetCinematicModeActive(0)                    
-                FirstSpawn = false
-                N_0x69d65e89ffd72313(false)    
-                Wait(1000)
-                TaskLeaveVehicle(PlayerPedId(), car, 0, 0) 
-                Wait(2000)                         
-                TaskVehicleDriveToCoord(ped, GetVehiclePedIsIn(ped, false), 2600.436,-1205.932,53.323, 10.0, 1.0, GetEntityModel(GetVehiclePedIsIn(PlayerPedId())), 67633207, 5.0, false)
-                TriggerEvent('FRP:NOTIFY:Simple', 'Você perdeu todas as suas roupas, tem uma loja de roupa do outro lado da rua, que tal ir lá se trocar?', 10000)
-                TriggerMusicEvent("MC_MUSIC_STOP")                    
-                Wait(10000)
-                --  TriggerEvent('FRP:NOTIFY:Simple', 'Digite /guiainiciante ver o Jornal Guia de Iniciante.', 10000)
-                DeleteVehicle(car)
-                Citizen.InvokeNative(0x971D38760FBC02EF, ped, false)
-                DeleteEntity(ped)
-            else               
-                N_0x69d65e89ffd72313(true)
-                SetCinematicModeActive(1)
-                DisableAllControlActions(1)
-            end 
-        end	
     end
 end)
 
