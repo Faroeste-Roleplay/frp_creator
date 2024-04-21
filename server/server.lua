@@ -32,11 +32,11 @@ end
 RegisterNetEvent('PersonaCreatorHandler.requestCreatePersona')
 AddEventHandler('PersonaCreatorHandler.requestCreatePersona', function(playerProfileCreation)
     local _source = source
-    local User = API.getUserFromSource(_source)
+    local User = API.GetUserFromSource(_source)
 
     local names = sliptStringToArray(playerProfileCreation.name)
 
-    local charId = User:createCharacter(names[1], names[2], playerProfileCreation.age, playerProfileCreation)
+    local charId = User:CreateCharacter(names[1], names[2], playerProfileCreation.age, playerProfileCreation)
 
     if charId then
         -- local Character = User:setCharacter(charId)
@@ -46,7 +46,7 @@ AddEventHandler('PersonaCreatorHandler.requestCreatePersona', function(playerPro
         -- local encoded = json.encode({-1099.470,-1839.129,60.327})
         -- Character:setData(Character:getId(), "metaData", "position", encoded)
 
-        User:setCharacter( charId ) -- Will draw itself
+        User:SetCharacter( charId ) -- Will draw itself
     end
 
     Wait(1000)
