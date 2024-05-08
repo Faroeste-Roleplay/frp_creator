@@ -147,7 +147,7 @@ Game.Scene.CreateInputHandlers = function()
         end
 
         local focusedLineupGender = Game.Scene.focusedLineupGender
-        print(" focusedLineupGender :: ", focusedLineupGender)
+        -- print(" focusedLineupGender :: ", focusedLineupGender)
 
         -- Nenhum dos lineupPeds estão focados/selecionados, ignorar.
         if focusedLineupGender == nil then
@@ -157,7 +157,7 @@ Game.Scene.CreateInputHandlers = function()
         local  eLineupGenderStr = focusedLineupGender == eLineupGender.Female and 'female' or 'male';
         local ped = Game.Scene.lineupPedMap[eLineupGenderStr];
 
-        print(" ped :: ", ped)
+        -- print(" ped :: ", ped)
 
         Game.State = ePersonaCreationState.Transitioning;
 
@@ -254,7 +254,7 @@ Game.Scene.CreateStartToCustomizationTransition = function(ped)
     local equippedMetapedClothing = exports["frp_appearance"]:Start(ped, nil, onConfirm, onBeforeUndo, onUndo)
     Game.equippedMetapedClothing = equippedMetapedClothing
     
-    print(" START :: equippedMetapedClothing , ", json.encode(equippedMetapedClothing))
+    -- print(" START :: equippedMetapedClothing , ", json.encode(equippedMetapedClothing))
 
     -- local started, editor = exports["frp_appearance"]:Start(gscPersonaEditor, ped, function(status)
     --     local success = Game.RequestCreatePersona(Game.equippedMetapedClothing);
