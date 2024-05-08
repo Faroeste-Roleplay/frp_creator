@@ -218,43 +218,43 @@ Config.PedsInitialSettings =
         },
         {
             type = eMetapedBodyApparatusType.Heads,
-            id = 0,
-            styleId = 2,
+            id = 1,
+            styleId = 1,
         },
         {
             type = eMetapedBodyApparatusType.BodiesLower,
             id = 1,
-            styleId = 2,
+            styleId = 1,
         },
         {
             type = eMetapedBodyApparatusType.BodiesUpper,
             id = 1,
-            styleId = 2,
+            styleId = 1,
         },
         {
             type = eMetapedBodyApparatusType.Eyes,
-            id = 0,
+            id = 1,
             styleId = 1,
         },
         {
             type = eMetapedBodyApparatusType.Teeth,
-            id = 0,
-            styleId = 0,
+            id = 1,
+            styleId = 1,
         },
         {
             type = eMetapedBodyApparatusType.Pants,
             id = 2,
-            styleId = 0,
+            styleId = 1,
         },
         {
             type = eMetapedBodyApparatusType.ShirtsFull,
             id = 2,
-            styleId = 0,
+            styleId = 1,
         },
         {
             type = eMetapedBodyApparatusType.Boots,
             id = 1,
-            styleId = 0,
+            styleId = 1,
         },
     },
     [eMetapedBodyApparatusGender.Male] =
@@ -266,43 +266,43 @@ Config.PedsInitialSettings =
         },
         {
             type = eMetapedBodyApparatusType.Heads,
-            id = 0,
-            styleId = 2,
+            id = 1,
+            styleId = 1,
         },
         {
             type = eMetapedBodyApparatusType.BodiesLower,
             id = 1,
-            styleId = 2,
+            styleId = 1,
         },
         {
             type = eMetapedBodyApparatusType.BodiesUpper,
             id = 1,
-            styleId = 2,
+            styleId = 1,
         },
         {
             type = eMetapedBodyApparatusType.Eyes,
-            id = 0,
+            id = 1,
             styleId = 5,
         },
         {
             type = eMetapedBodyApparatusType.Teeth,
-            id = 0,
-            styleId = 0,
+            id = 1,
+            styleId = 1,
         },
         {
             type = eMetapedBodyApparatusType.Pants,
             id = 2,
-            styleId = 0,
+            styleId = 1,
         },
         {
             type = eMetapedBodyApparatusType.ShirtsFull,
             id = 1,
-            styleId = 0,
+            styleId = 1,
         },
         {
             type = eMetapedBodyApparatusType.Boots,
             id = 1,
-            styleId = 0,
+            styleId = 1,
         },
     }
 }
