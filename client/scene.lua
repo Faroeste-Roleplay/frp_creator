@@ -225,45 +225,11 @@ Game.Scene.CreateStartToCustomizationTransition = function(ped)
     FreezeEntityPosition(ped, false)
 
     Wait(2000)
-
-    exports.frp_core:clothingSystemPushRequest(ped, 'CreateHeadOverlay', { });
 -- 
     -- local equippedMetapedClothing = exports.frp_core:handleStartEditor(ped)
     -- print(" INICIOU :: ", json.encode(equippedMetapedClothing))
     -- Game.equippedMetapedClothing = equippedMetapedClothing
-    
-    local eMetapedHeadOverlayTypeRDR3 =
-    {
-        'MPC_OVERLAY_LAYER_SKIN_MOTTLING',
-        'MPC_OVERLAY_LAYER_AGEING',
-        'MPC_OVERLAY_LAYER_COMPLEXION',
-        -- 'MPC_OVERLAY_LAYER_COMPLEXION_2',
-        'MPC_OVERLAY_LAYER_FRECKLES',
-        'MPC_OVERLAY_LAYER_MOLES',
-        'MPC_OVERLAY_LAYER_SPOTS',
-        'MPC_OVERLAY_LAYER_FOUNDATION',
-        'MPC_OVERLAY_LAYER_BLUSHER',
-        'MPC_OVERLAY_LAYER_EYELINER',
-        'MPC_OVERLAY_LAYER_EYESHADOW',
-        'MPC_OVERLAY_LAYER_LIPSTICK',
-        'MPC_OVERLAY_LAYER_EYEBROWS',
-        'MPC_OVERLAY_LAYER_GRIME',
-        -- 'MPC_OVERLAY_LAYER_FACE_PAINT', // A gente não vai usar a Mascara.
-        'MPC_OVERLAY_LAYER_SCAR',
-        'MPC_OVERLAY_LAYER_FACIAL_HAIR',
-        'MPC_OVERLAY_LAYER_HEAD_HAIR',
-    }
 
-    for _, overlay in pairs(eMetapedHeadOverlayTypeRDR3) do
-        exports.frp_core:clothingSystemPushRequest(ped, "UpdateOverlayLayer",
-        {
-            layerType =  eOverlayLayer[overlay],
-            styleIndex = 0,
-            alpha =  0.0,
-        });
-    end
-
-    
     local function onConfirm(personaData)
         print(" onConfirm :: ", json.encode(personaData ,{indent=true}))
 
