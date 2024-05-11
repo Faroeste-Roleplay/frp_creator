@@ -1,4 +1,3 @@
-
 eMetapedBodyApparatusType = 
 {
     Invalid           = -1,
@@ -44,7 +43,6 @@ eMetapedBodyApparatusType =
     BeardsComplete = 39,
     HairAccessories = 40,
 }
-
 
 eMetapedBodyApparatusTypeToStr = 
 {
