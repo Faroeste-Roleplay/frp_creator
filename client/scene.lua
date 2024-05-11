@@ -252,7 +252,23 @@ Game.Scene.CreateStartToCustomizationTransition = function(ped)
     end
 
     local equippedMetapedClothing = exports["frp_appearance"]:Start(ped, nil, onConfirm, onBeforeUndo, onUndo)
-    Game.equippedMetapedClothing = equippedMetapedClothing
+
+    equippedMetapedClothing.bodyApparatusId = 0;
+    equippedMetapedClothing.bodyApparatusStyleId = 0;
+
+    equippedMetapedClothing.isMale = IsPedMale(ped);
+
+    equippedMetapedClothing.whistleShape = 0.0;
+    equippedMetapedClothing.whistlePitch = 0.0;
+    equippedMetapedClothing.whistleClarity = 0.0;
+    equippedMetapedClothing.height = 180;
+
+    equippedMetapedClothing.bodyWeightOufitType = 10;
+
+    equippedMetapedClothing.bodyKindType = 1;
+
+    Game.equippedMetapedClothing = equippedMetapedClothing;
+    
     
     -- print(" START :: equippedMetapedClothing , ", json.encode(equippedMetapedClothing))
 
@@ -272,22 +288,6 @@ Game.Scene.CreateStartToCustomizationTransition = function(ped)
 
     -- Valores padrões para o editor de persona
     -- TODO: Melhorar isso!
-
-    equippedMetapedClothing.bodyApparatusId = 0;
-    equippedMetapedClothing.bodyApparatusStyleId = 0;
-
-    equippedMetapedClothing.isMale = IsPedMale(ped);
-
-    equippedMetapedClothing.whistleShape = 0.0;
-    equippedMetapedClothing.whistlePitch = 0.0;
-    equippedMetapedClothing.whistleClarity = 0.0;
-    equippedMetapedClothing.height = 180;
-
-    equippedMetapedClothing.bodyWeightOufitType = 10;
-
-    equippedMetapedClothing.bodyKindType = 1;
-
-    Game.equippedMetapedClothing = equippedMetapedClothing;
 
     -- Game.Editor = editor;
 end

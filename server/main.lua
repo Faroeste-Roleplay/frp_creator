@@ -1,6 +1,16 @@
+local Tunnel = module("frp_core", "lib/Tunnel")
+local Proxy = module("frp_core", "lib/Proxy")
 
+API = Proxy.getInterface("API")
+cAPI = Tunnel.getInterface("API")
 
 lib.callback.register('PersonaEditor.RequestCreatePersona', function(source, request)
+    local User = API.GetUserFromSource(source)
+
+    if not User then
+        return
+    end
+
     local equippedApparelsByType = request.equippedApparelsByType
 
     local headApparatusId = equippedApparelsByType[eMetapedBodyApparatusType.Heads]?.id
@@ -58,12 +68,15 @@ lib.callback.register('PersonaEditor.RequestCreatePersona', function(source, req
 
     local appearanceOverlays, appearanceOverlaysCustomizable = exports.frp_creator:formatOverlaysToSave(request?.overlayLayersMap)
 
+    print(" appearanceOverlaysCustomizable :: ", json.encode(appearanceOverlaysCustomizable, {indent=true}))
+    print(" appearanceOverlays :: ", json.encode(appearanceOverlays, {indent=true}))
+
     local characterNode = {
         faceFeatures = appearance.expressions,
-        componets = appearance,
+        components = appearance,
         componentsCustomizable = appearanceCustomizable,
-        overlays = appearanceOverlays,
-        overlaysCustomizable = appearanceOverlaysCustomizable
+        overlays = appearanceOverlays.appearanceOverlays,
+        overlaysCustomizable = appearanceOverlays.appearanceOverlaysCustomizable
     }
 
     local charId = User:CreateCharacter(request.firstName, request.lastName, request.birthDate, characterNode, equippedApparelsByType)
@@ -79,7 +92,6 @@ lib.callback.register('PersonaEditor.RequestCreatePersona', function(source, req
     --     User:SetCharacter( charId ) -- Will draw itself
     -- end
 
-    print(" appearanceOverlaysCustomizable :: ", json.encode(appearanceOverlaysCustomizable, {indent=true}))
-    print(" appearanceOverlays :: ", json.encode(appearanceOverlays, {indent=true}))
+
 end)
 

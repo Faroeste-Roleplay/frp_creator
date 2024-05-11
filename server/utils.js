@@ -98,10 +98,7 @@ async function formatOverlaysToSave(overlayLayersMap)
 
     // console.log('handleRequestCreatePersona :: appearanceOverlaysData', appearanceOverlaysData);
 
-    const appearanceOverlays =
-    {
-        data: appearanceOverlaysData,
-    }
+    const appearanceOverlays = appearanceOverlaysData
 
     // console.log('handleRequestCreatePersona :: appearanceOverlays', JSON.stringify(appearanceOverlays));
 
