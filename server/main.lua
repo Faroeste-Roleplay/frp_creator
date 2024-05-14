@@ -45,7 +45,7 @@ lib.callback.register('PersonaEditor.RequestCreatePersona', function(source, req
 
         bodyKindType = request?.bodyKindType,
     }
-    print(" appearance :: ", json.encode(appearance, {indent=true}))
+    -- print(" appearance :: ", json.encode(appearance, {indent=true}))
 
     local hairApparatusId, hairApparatusStyleId = equippedApparelsByType[eMetapedBodyApparatusType.Hair]?.id, equippedApparelsByType[eMetapedBodyApparatusType.Hair]?.styleId
 
@@ -66,10 +66,9 @@ lib.callback.register('PersonaEditor.RequestCreatePersona', function(source, req
         weightPercentage = appearance.bodyWeightOufitType,
     }
 
-    local appearanceOverlays, appearanceOverlaysCustomizable = exports.frp_creator:formatOverlaysToSave(request?.overlayLayersMap)
-
-    print(" appearanceOverlaysCustomizable :: ", json.encode(appearanceOverlaysCustomizable, {indent=true}))
-    print(" appearanceOverlays :: ", json.encode(appearanceOverlays, {indent=true}))
+    local appearanceOverlays = exports.frp_creator:formatOverlaysToSave(request?.overlayLayersMap)
+    
+    -- print(" appearanceOverlays :: ", json.encode(appearanceOverlays, {indent=true}))
 
     local characterNode = {
         faceFeatures = appearance.expressions,
