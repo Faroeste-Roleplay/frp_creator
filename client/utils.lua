@@ -35,3 +35,43 @@ Game.Utils.IsModelMp = function(ped)
 
     return pedModel == `mp_male` or `mp_female`
 end
+
+
+local eFormData =
+{
+    [1] = 'name',
+    [2] = 'lastname',
+    -- [3] = 'nacionality',
+    -- [4] = 'gender',
+    [3] = 'birthdate',
+    -- [5] = 'class',
+}
+
+
+function ValidadePlayerInfo(data)
+    if not data then
+        cAPI.Notify(
+            i18n.translate('error.error_setup_name', i18n.translate(string.format('general.%s', formIndex))), 'error')
+        return false
+    end
+
+    for i = 1, #eFormData do
+        local info = data[i]
+        local formIndex = eFormData[i]
+
+        if info then
+            if string.len(info) < 3 and formIndex ~= 'gender' then
+                cAPI.Notify(
+                    i18n.translate('error.error_setup_name', i18n.translate(string.format('general.%s', formIndex))),
+                    'error')
+                return false
+            end
+        else
+            cAPI.Notify(
+                i18n.translate('error.error_setup_name', i18n.translate(string.format('general.%s', formIndex))), 'error')
+            return false
+        end
+    end
+
+    return true
+end

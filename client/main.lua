@@ -119,12 +119,28 @@ CreateThread(function()
 end)
 
 Game.RequestCreatePersona = function (equippedMetapedClothing)
-
     local playerData = equippedMetapedClothing
 
-    playerData.firstName = ""
-    playerData.lastName = ""
-    playerData.birthDate = ""
+    ::setupName::
+    local inputData = {
+        { type = "input", label = i18n.translate('general.name'),        placeholder = "Mack" },
+        { type = "input", label = i18n.translate('general.lastname'),    placeholder = "Miller" },
+        { type = "date", label = i18n.translate('general.birthdate') },
+    }
+
+    local input = lib.inputDialog(i18n.translate('general.personaCreator'), inputData)
+
+    local validadePlayerInfo = ValidadePlayerInfo(input)
+
+    if not validadePlayerInfo then
+        goto setupName
+    end
+
+    playerData.firstName = inputData[1]
+    playerData.lastName = inputData[2]
+    playerData.birthDate = inputData[3]
+
+    playerData.isMale = IsPedMale(Game.Ped)
     
     local request = lib.callback.await("PersonaEditor.RequestCreatePersona", false, playerData)
     print(" RequestCreatePersona :: ", request)
