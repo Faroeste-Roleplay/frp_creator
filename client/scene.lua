@@ -226,7 +226,7 @@ Game.Scene.CreateStartToCustomizationTransition = function(ped)
 
     Wait(2000)
 -- 
-    -- local equippedMetapedClothing = exports.frp_core:handleStartEditor(ped)
+    -- local equippedMetapedClothing = exports.frp_lib:handleStartEditor(ped)
     -- print(" INICIOU :: ", json.encode(equippedMetapedClothing))
     -- Game.equippedMetapedClothing = equippedMetapedClothing
 
@@ -316,11 +316,11 @@ Game.Scene.SetPedDefaultOutfit = function(ped)
         local  type, id, styleId = outfit.type, outfit.id, outfit.styleId
 
         if id <= -1 then
-            exports.frp_core:clothingSystemPushRequest(ped, "RemoveCurrentApparatusByType", type);
+            cAPI.clothingSystemPushRequest(ped, "RemoveCurrentApparatusByType", type);
             return
         end
 
-        exports.frp_core:clothingSystemPushRequest(ped, "UpdateCurrentApparatus",
+        cAPI.clothingSystemPushRequest(ped, "UpdateCurrentApparatus",
         {
             apparatusId =  id,
             apparatusStyleId = styleId,
