@@ -243,15 +243,15 @@ Game.Scene.CreateStartToCustomizationTransition = function(ped)
     end
     
     local function onBeforeUndo(personaData)
-
+        Game.Stop();
         return true
     end
     local function onUndo(personaData)
-
+        SpawnSelector.Start()
         return true
     end
 
-    local equippedMetapedClothing = exports["frp_appearance"]:Start(ped, nil, onConfirm, onBeforeUndo, onUndo)
+    local equippedMetapedClothing = Appearance.Start(ped, nil, onConfirm, onBeforeUndo, onUndo)
 
     equippedMetapedClothing.bodyApparatusId = 0;
     equippedMetapedClothing.bodyApparatusStyleId = 0;

@@ -1,10 +1,6 @@
 Game = {}
 Game.Editor = {}
 
-RegisterCommand("char_create", function()
-    TriggerEvent("FRPCreator:Client:StartScript")
-end)
-
 RegisterNetEvent("FRPCreator:Client:StartScript", function()
     Game.Init()
 end)
@@ -91,7 +87,7 @@ Game.Stop = function()
     DisplayHud(false)
     DisplayRadar(false)
 
-    -- Game.Editor:Stop()
+    Appearance.OnStop()
 end
 
 CreateThread(function()
@@ -143,7 +139,6 @@ Game.RequestCreatePersona = function (equippedMetapedClothing)
     playerData.isMale = IsPedMale(Game.Ped)
     
     local request = lib.callback.await("PersonaEditor.RequestCreatePersona", false, playerData)
-    print(" RequestCreatePersona :: ", request)
     return request
 end
 
