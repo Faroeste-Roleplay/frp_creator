@@ -80,17 +80,6 @@ lib.callback.register('PersonaEditor.RequestCreatePersona', function(source, req
 
     local charId = User:CreateCharacter(request.firstName, request.lastName, request.birthDate, characterNode, equippedApparelsByType)
 
-    -- if charId then
-    --     -- local Character = User:setCharacter(charId)
-    --     -- Character:setData(Character:getId(), "metaData", "hunger", 100)
-    --     -- Character:setData(Character:getId(), "metaData", "thirst", 100)
-
-    --     -- local encoded = json.encode({-1099.470,-1839.129,60.327})
-    --     -- Character:setData(Character:getId(), "metaData", "position", encoded)
-
-    --     User:SetCharacter( charId ) -- Will draw itself
-    -- end
-
-
+    return charId ~= nil
 end)
 
