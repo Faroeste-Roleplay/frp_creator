@@ -316,11 +316,11 @@ Game.Scene.SetPedDefaultOutfit = function(ped)
         local  type, id, styleId = outfit.type, outfit.id, outfit.styleId
 
         if id <= -1 then
-            cAPI.clothingSystemPushRequest(ped, "RemoveCurrentApparatusByType", type);
+            Appearance.clothingSystemPushRequest(ped, "RemoveCurrentApparatusByType", type);
             return
         end
 
-        cAPI.clothingSystemPushRequest(ped, "UpdateCurrentApparatus",
+        Appearance.clothingSystemPushRequest(ped, "UpdateCurrentApparatus",
         {
             apparatusId =  id,
             apparatusStyleId = styleId,

@@ -21,8 +21,6 @@ Game.Init = function ()
 
     Game.Scene.LoadIpls()
 
-    Game.Scene.CreateInputHandlers()
-
     TriggerServerEvent("net.personaCreatorHandlerSetPlayerRoutingBucket");
 
     SetClockTime(12, 0, 0);
@@ -42,6 +40,9 @@ Game.Init = function ()
     AnimpostfxStop("SkyTL_2100_04Storm_nofade");
     
     Game.state = ePersonaCreationState.Selecting
+
+    Game.Scene.CreateInputHandlers()
+
     Game.Start = true
 end
 
