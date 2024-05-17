@@ -133,9 +133,9 @@ Game.RequestCreatePersona = function (equippedMetapedClothing)
         goto setupName
     end
 
-    playerData.firstName = inputData[1]
-    playerData.lastName = inputData[2]
-    playerData.birthDate = inputData[3]
+    playerData.firstName = input[1]
+    playerData.lastName = input[2]
+    playerData.birthDate = input[3]
 
     playerData.isMale = IsPedMale(Game.Ped)
     
