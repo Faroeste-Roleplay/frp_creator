@@ -1,427 +1,338 @@
-local Tunnel = module("frp_core", "lib/Tunnel")
-local Proxy = module("frp_core", "lib/Proxy")
+Game.Scene = {}
+Game.Scene.lineupPedMap = {}
+Game.Scene.iplsLoaded = {}
 
-cAPI = Proxy.getInterface("API")
-API = Tunnel.getInterface("API")
+Game.Scene.Start = function(arguments)
+    Game.Player.SetPlayerPosition(vec3(-555.162, -3777.914, 35.29764))
+end
 
+Game.Scene.LoadIpls = function()
+    local iplsData = Config.Ipls
 
-staticOrderedCameras = 
-{
-    {-561.206, -3776.224, 238.895, 0.000,  0.000, 270.000, 70.0},        
-    {-558.909-0.5, -3776.300, 238.5973, 0.000, 0.000, 210.000, 70.0},
-    {-561.8157, -3780.966, 239.0805, -4.2146, -0.0007, -87.8802, 70.0}
-}
-
-staticInterpolableCams = 
-{
-    {-558.909-1.0, -3775.616, 237.590+1.6, -10.000,  0.000, 270.000, 70.0},
-    {-558.909-1.0, -3776.978, 237.590+1.5, -10.214, -0.000, 270.000, 70.0},
-    {-561.8157+1.4, -3780.966, 239.1805, -4.2146, -0.0007, -87.8802, 25.0}, 
-    {-561.8157+0.4, -3780.966, 239.0805, -4.2146, -0.0007, -87.8802, 45.0}
-}
-
-State = {
-    NONE                  = 0,
-    WAITING               = 1,
-    SELECTING             = 2,
-    CUSTOMIZING           = 3,
-
-    TRANSITION_TO_SELECTING    = 4,
-    TRANSITION_TO_CUSTOMIZING  = 5,
-}
-
-gState = nil
-
-gIsCamInterpolating = nil
-
-CreationMode = false
-
-gPedsSelectedPedIndex = 1
-gPedSelectedSex = "none"
-
-function request()
-
-    gState = State.NONE;
-    
-    staticPedModels = {
-        'mp_male',
-        'mp_female',
-    }
-
-    defaultPedComponents = 
-    {
-        ["female"] =
-        {
-            ['heads'] =
-            {
-                1,
-                4
-            },
-            ["BODIES_UPPER"] =
-            {
-                3,
-                4
-            },
-            ['hair'] =
-            {
-                2,
-                10
-            },
-            ['eyes'] =
-            {
-                1,
-                3               
-            },
-            ['teeth'] =
-            {
-                1,
-                1
-            }      
-        },
-        ["male"] =
-        {
-            ['heads'] =
-            {
-                1,
-                4
-            },
-            ['BODIES_UPPER'] =
-            {
-                4,
-                3
-            },
-            ['hair'] =
-            {
-                7,
-                2
-            },
-            ['mustache'] =
-            {
-                7,
-                2                
-            },
-            ['eyes'] =
-            {
-                1,
-                2                
-            },
-            ['teeth'] =
-            {
-                1,
-                1
-            }            
-        },
-    }
-
-    staticPedPositions = 
-    {
-        {-558.559, -3775.616, 237.590, 95.0},
-        {-558.559, -3776.978, 237.590, 95.0},
-    }
-
-    staticLightPositions = 
-    {
-        {-561.860, -3776.757, 238.590, 10.000, 50.000},
-        {-559.590, -3780.757, 238.590, 10.000, 50.000},
-    }
-
-    gImaps =
-    {
-        -1699673416,
-        1679934574,
-        183712523,
-    }
-
-    for _, imap in pairs(gImaps) do
-        RequestImap(imap)
-    end 
-
-    gPeds = {}
-
-    local uiMenuData = exports.frp_creator:getDataCreator()
-
-    SendNUIMessage({
-        type = 'receivedata',
-        uiMenuData = uiMenuData,
-    })
-
-    Wait(1500)
-
-    for i = 1, 2 do
-
-        TriggerServerEvent("PersonaCreatorHandler.setPlayerRoutingBucket")
-
-        pedModel = staticPedModels[i]
-
-        hashedPedModel = GetHashKey(pedModel)
-
-        if not HasModelLoaded(hashedPedModel) then
-            RequestModel(hashedPedModel)
-            while not HasModelLoaded(hashedPedModel) do
-                Citizen.Wait(10)
-            end
-        end
-
-        local coords = staticPedPositions[i]
-
-        local x, y, z, h  = coords[1], coords[2], coords[3], coords[4]
-        
-        ped = CreatePed(hashedPedModel, x, y, z, 89.37, true, 0)
-
-        TriggerServerEvent("PersonaCreatorHandler.setRoutingBucket", NetworkGetNetworkIdFromEntity(ped))
-
-        SetEntityHeading(ped, h)
-        
-        Citizen.InvokeNative(0x283978A15512B2FE, ped, true)
-        Citizen.InvokeNative(0x58A850EAEE20FAA3, ped)
-
-        NetworkSetEntityInvisibleToNetwork(ped, true)
-        
-        local pedSex = "female"
-
-        if IsPedMale(ped) then
-            pedSex = "male";
-        end
-
-        local idleAnimationDict
-
-        if pedSex == "male" then
-            idleAnimationDict = "SCRIPT_COMMON@TAILOR_SHOP"
-        else 
-            idleAnimationDict = "MECH_LOCO_F@TYPE@COWGIRL@NORMAL@UNARMED@IDLE"
-        end
-
-        cAPI.SetSkin(ped, json.encode(defaultPedComponents[pedSex]))
-
-        if not HasAnimDictLoaded(idleAnimationDict) then
-            RequestAnimDict(idleAnimationDict)
-
-            while not HasAnimDictLoaded(idleAnimationDict) do
-                Citizen.Wait(0)
-            end
-        end
-
-        TaskPlayAnim(ped, idleAnimationDict,  "idle", 1000.0, -4.0, -1, 8193, 0.0, false, 0, false, 0, false)
-
-        table.insert(gPeds, ped)
-    end
-    
-    do        
-        gCameraIndex = 1;
-
-        local configCam = staticOrderedCameras[gCameraIndex];
-        local x, y, z, pitch, roll, yaw, fov = configCam[1], configCam[2], configCam[3], configCam[4], configCam[5], configCam[6], configCam[7]
-
-        gCamera = CreateCam("DEFAULT_SCRIPTED_CAMERA", true);
-        SetCamCoord(gCamera, x, y, z);
-        SetCamRot(gCamera, pitch, roll, yaw, 0);
-        SetCamActive(gCamera, true);
-        RenderScriptCams(true, false, 1, true, true, 0);
-
-        SetFocusPosAndVel(x, y, z, 0.0, 0.0, 0.0);
-        -- Debugging
-        SetEntityCoords(PlayerPedId(), x, y, z, false, false, false, false);
-
-        SetEntityInvincible(PlayerPedId(), true);
-        SetEntityVisible(PlayerPedId(), false);
-        NetworkSetEntityInvisibleToNetwork(PlayerPedId(), true);
-
-        
+    if not iplsData then
+        return
     end
 
-    CreationMode = true 
+    for _, ipl in pairs(iplsData) do 
+        RequestImap(ipl);
 
-    gState = State.SELECTING;
+        table.insert(Game.Scene.iplsLoaded, ipl)
+    end
+end
+
+LightRendererLightInfoArray = {
+    {-561.860, -3776.757, 238.590, 10.000, 50.000},
+    {-559.590, -3780.757, 238.590, 10.000, 50.000}
+}
+
+Game.Scene.RendererLight = function()
+    for i = 1, #LightRendererLightInfoArray do
+        local x, y, z, range, intensity = table.unpack(LightRendererLightInfoArray[i])
+        -- print(" RendererLight :: ", x, y, z, 255, 255, 255, range, intensity)
+        DrawLightWithRange(x, y, z, 255, 255, 255, range, intensity)
+    end
+end
+
+Game.Scene.CreateLineupCamera = function(lineupGender)
+
+    if not Game.Scene.lineupCameraMap then
+        Game.Scene.lineupCameraMap = {}
+    end
+
+    local  lineupGenderStr = lineupGender == eLineupGender.Female and 'female' or 'male';
+    local camData = Config.LineupPeds[lineupGenderStr].camera
+
+    local cam = CreateCam("DEFAULT_SCRIPTED_CAMERA", false);
+
+    SetCamCoord(cam, camData.x, camData.y, camData.z);
+    SetCamRot(cam, camData.pitch, camData.roll, camData.yaw, 2);
+    SetCamFov(cam, camData.fov or 35.0);
+
+    N_0x11f32bb61b756732(cam, 4.0) -- SetCamFocusDistance
+
+    Game.Scene.lineupCameraMap[lineupGenderStr] = cam
+end
+
+Game.Scene.CreateLineupPeds = function()
+    Game.Scene.CreateLineupPed(eLineupGender.Male, GetHashKey("mp_male"))
+    Game.Scene.CreateLineupPed(eLineupGender.Female, GetHashKey("mp_female"))
+end
+
+Game.Scene.CreateLineupPed = function(lineupGender, pedModelHash)
+
+    if not Game.Scene.lineupPedMap then
+        Game.Scene.lineupPedMap = {}
+    end
+
+    lib.requestModel(pedModelHash)
+
+    local  lineupGenderStr = lineupGender == eLineupGender.Female and 'female' or 'male';
+
+    local pedConfig = Config.LineupPeds[lineupGenderStr].position
+
+    local pedId = CreatePed(pedModelHash, pedConfig.x, pedConfig.y, pedConfig.z, pedConfig.heading, true, false, false, false);
+
+    TriggerServerEvent('net.personaCreatorHandlerSetRoutingBucket', NetworkGetNetworkIdFromEntity(pedId))
+
+    SetPedRandomComponentVariation(pedId, 1);
+
+    FreezeEntityPosition(pedId, true)
+    SetFocusEntity(pedId);
+
+    Game.Scene.lineupPedMap[lineupGenderStr] = pedId;
+
+    Game.Scene.SetPedDefaultOutfit(pedId);
+end
+
+Game.Scene.ChangeFocusedLineupGender = function(newFocusedLineupGender)
+    local camStr
+    local newGender
+
+    if type(newFocusedLineupGender) == "string" then
+        camStr = newFocusedLineupGender
+        newGender = newFocusedLineupGender == 'female' and 1 or 0
+    end
+
+    if type(newFocusedLineupGender) == "number" then
+        camStr = newFocusedLineupGender == eLineupGender.Female and 'female' or 'male';
+        newGender = newFocusedLineupGender
+    end
+
+    local cam = Game.Scene.lineupCameraMap[camStr]
+
+    SetCamActiveWithInterp(cam, GetRenderingCam(), 1200, 1, 1);
+    RenderScriptCams(true, false, 3000, true, false, 0);
+
+    Game.Scene.focusedLineupGender = newGender
+end
+
+Game.Scene.ChangeFocusedLineupPedWithKeyboardArrow = function(leftDirection)
+    -- A Camera do ped ainda tá interpolando, vamos aguardar...
+
+    local  newFocusedLineupGender = Game.Scene.focusedLineupGender == eLineupGender.Female and 'female' or 'male';
     
-    local x,y,z = GetEntityCoords(PlayerPedId(), false);
-    
-    Citizen.CreateThread(function()
-        RequestCollisionAtCoord(x,y,z)
-        while not HasCollisionLoadedAroundEntity(PlayerPedId()) do
-            print('[creator] Loading spawn collision.')
-            Wait(0)
+    if (IsCamInterpolating(Game.Scene.lineupCameraMap[newFocusedLineupGender]) or IsCamInterpolating(GetRenderingCam())) then
+        return;
+    end
+
+    PlaySoundFrontend(leftDirection and 'gender_left' or 'gender_right', 'RDRO_Character_Creator_Sounds', true, 0);
+
+    Game.Scene.ChangeFocusedLineupGender(leftDirection and 'male' or 'female');
+end
+
+Game.Scene.CreateInputHandlers = function()
+
+    local onRightArrowPressed = Game.Inputs.On('OnPressed', eIoContextType.KeyboardRightArrow, function()
+        if Game.state == ePersonaCreationState.Selecting then
+            Game.Scene.ChangeFocusedLineupPedWithKeyboardArrow(false)
+        elseif Game.state == ePersonaCreationState.Customizing then
+            Game.Scene.RotateCustomizationPed(false);
         end
     end)
-    Wait(1000)
-    DoScreenFadeIn(500)
-
-    TriggerEvent("FRP:CHARCREATION:sceneSelect")
-end
 
 
-RegisterNetEvent("FRP:CHARCREATION:sceneSelect")
-AddEventHandler("FRP:CHARCREATION:sceneSelect", function()    
-    local PAD_RIGHT_ARROW = 0xDEB34313
-    local PAD_LEFT_ARROW  = 0xA65EBAB4
-    local INPUT_FRONTEND_ACCEPT = 0xC7B5340A
+    local onLeftArrowPressed = Game.Inputs.On('OnPressed', eIoContextType.KeyboardLeftArrow, function()
+        if Game.state == ePersonaCreationState.Selecting then
+            Game.Scene.ChangeFocusedLineupPedWithKeyboardArrow(true)
+        elseif Game.state == ePersonaCreationState.Customizing then
+            Game.Scene.RotateCustomizationPed(false);
+        end
+    end)
 
-    while CreationMode do
-        Wait(0)
 
-        if CreationMode then
-            DisableAllControlActions(0)
-            DisplayRadar(false)
-            DisplayHud(true)
-            NetworkClockTimeOverride(8, 0, 0, 0, false)
+    local onEnterPressed = Game.Inputs.On('OnPressed', eIoContextType.KeyboardEnter, function()
+        -- Não estamos no estado de seleção, ignorar.
+        if Game.state ~= ePersonaCreationState.Selecting then
+            return 
         end
 
-        for i = 1, #staticLightPositions do
+        local focusedLineupGender = Game.Scene.focusedLineupGender
+        -- print(" focusedLineupGender :: ", focusedLineupGender)
 
-            local lightPosition = staticLightPositions[i]
-            local x, y, z, range, intensity = lightPosition[1], lightPosition[2], lightPosition[3], lightPosition[4], lightPosition[5]
+        -- Nenhum dos lineupPeds estão focados/selecionados, ignorar.
+        if focusedLineupGender == nil then
+            return
+        end
 
+        local  eLineupGenderStr = focusedLineupGender == eLineupGender.Female and 'female' or 'male';
+        local ped = Game.Scene.lineupPedMap[eLineupGenderStr];
+
+        -- print(" ped :: ", ped)
+
+        Game.State = ePersonaCreationState.Transitioning;
+
+        Game.Scene.CreateStartToCustomizationTransition(ped)
+    end)
+
+    -- onRightArrowPressed()
+    -- onLeftArrowPressed()
+    -- onEnterPressed()
+
+    return { onRightArrowPressed, onLeftArrowPressed, onEnterPressed}
+end
+
+Game.Scene.CreateStartToCustomizationTransition = function(ped)
+    local animScene = CreateAnimScene('script@mp@character_creator@transitions', 0, 0, false, true);
+
+    LoadAnimScene(animScene);
+
+    Game.Scene._customizationCurrentPed = ped
+    -- Aguardar o animScene carregar...
+    -- IsAnimSceneLoaded
+    while not N_0x477122b8d05e7968(animScene, true,  false) do
+        Wait(0);
+    end
+
+    -- O nosso ped local precisa estar na mesma posição
+    -- que a camera antes da transição para o animScene
+    -- porque vai ser cameraLocalPed -> cameraAnimScene.
+    --
+    -- Meio merda em rockstar ;/
+    local  lineupGenderStr = Game.Scene.focusedLineupGender == eLineupGender.Female and 'female' or 'male';
+    local oldCam = Game.Scene.lineupCameraMap[lineupGenderStr]
+    Game.Player.SetPlayerPosition(GetCamCoord(oldCam))
+    Game.Player.ControlEnabled(false)
+
+    Wait(500)
+
+    local useMaleAnim = Game.Scene.focusedLineupGender == eLineupGender.Male;
+    local pedAnim = useMaleAnim and 'Male_MP' or 'Female_MP'
+
+    SetAnimSceneEntity(animScene, pedAnim, ped, 0);
+
+    StartAnimScene(animScene);
+
+    -- SetAnimScenePlayList
+    SetAnimScenePlaybackList(animScene, useMaleAnim and 'Pl_Start_to_Edit_Male' or 'Pl_Start_to_Edit_Female'); 
+
+    while not HasAnimEventFired(ped, 931807363) do 
+        Wait(0);
+    end
+
+    local cam = CreateCamera(GetHashKey('DEFAULT_SCRIPTED_CAMERA'), false);
+
+    SetCamCoord(cam, -561.8157, -3780.966, 239.0805);
+    SetCamRot(cam, -4.2146, -0.0007, -87.8802, 2);
+
+    SetCamFov(cam, 30.0);
+
+    SetCamActive(cam, true);
+    RenderScriptCams(true, false, 3000, true, false, 0);
+
+    Game.Scene.editCamera = cam;
+    Game.state = ePersonaCreationState.Customizing;
+
+    FreezeEntityPosition(ped, false)
+
+    Wait(2000)
+-- 
+    -- local equippedMetapedClothing = exports.frp_lib:handleStartEditor(ped)
+    -- print(" INICIOU :: ", json.encode(equippedMetapedClothing))
+    -- Game.equippedMetapedClothing = equippedMetapedClothing
+
+    local function onConfirm(personaData)
+        print(" onConfirm :: ", json.encode(personaData ,{indent=true}))
+
+        local success = Game.RequestCreatePersona(personaData);
+
+        if success then
+            --- RETORNAR Criação de personagem
+            Game.Stop();
+        end
+        return true
+    end
     
-            DrawLightWithRange(x, y, z, 255, 255, 255, range, intensity)
-        end
+    local function onBeforeUndo()
+        local alert = lib.alertDialog({
+            header = i18n.translate("info.cancel_appearance"),
+            content = i18n.translate("info.have_sure"),
+            centered = true,
+            cancel = true
+        })
 
-        if gState == State.SELECTING then
-            if IsDisabledControlJustReleased(0, PAD_RIGHT_ARROW) then                
-                gPedsSelectedPedIndex = 2
-                gPedSelectedSex = "female"
-
-                PlaySoundFrontend("gender_right", "RDRO_Character_Creator_Sounds", true, 0)
-
-                gIsCamInterpolating = true
-
-                interpolateToCamIndex(staticInterpolableCams, 2)
-            end
-            
-            if IsDisabledControlJustReleased(0, PAD_LEFT_ARROW) then
-                gPedsSelectedPedIndex = 1
-                gPedSelectedSex = "male"
-                
-                PlaySoundFrontend("gender_left", "RDRO_Character_Creator_Sounds", true, 0)
-
-                gIsCamInterpolating = true
-
-                interpolateToCamIndex(staticInterpolableCams, 1)
-            end
-
-            if IsDisabledControlJustReleased(0, INPUT_FRONTEND_ACCEPT) then
-                
-                TriggerEvent("FRP:CHARCREATION:startCustomizationScene", defaultPedComponents[gPedSelectedSex])
-
-                gIsCamInterpolating = false
-
-                interpolateToCamIndex(staticOrderedCameras, 2)
-
-                gState = State.TRANSITION_TO_SELECTING
-            end
-
-            local text = "Escolha seu personagem, use as setas do seu teclado. ~INPUT_FRONTEND_ACCEPT~ Para escolher."
-            notify(text)
-
-        elseif gState == State.TRANSITION_TO_SELECTING then
-
-            gState = State.TRANSITION_TO_CUSTOMIZING
-            Citizen.InvokeNative(0xFA233F8FE190514C, 0)
-            Citizen.InvokeNative(0xE9990552DEC71600)
-
-        elseif gState == State.TRANSITION_TO_CUSTOMIZING then
-
-            Citizen.InvokeNative(0xFA233F8FE190514C, 0)
-            Citizen.InvokeNative(0xE9990552DEC71600)  
-
-        elseif gState == State.CUSTOMIZING then
-
-            Citizen.InvokeNative(0xFA233F8FE190514C, 0)
-            Citizen.InvokeNative(0xE9990552DEC71600)
-        end
-        
-    end
-end)
-
-
-function notify(_message)
-    local str = Citizen.InvokeNative(0xFA925AC00EB830B9, 10, "LITERAL_STRING", _message, Citizen.ResultAsLong())
-    SetTextScale(0.25, 0.25)
-    SetTextCentre(1)
-    Citizen.InvokeNative(0xFA233F8FE190514C, str)
-    Citizen.InvokeNative(0xE9990552DEC71600)
-end
-
-function interpolateToCamIndex(camRefArray, camIndex)
-    local camConfig = camRefArray[camIndex]    
-    local x, y, z, pitch, roll, yaw, fov =  camConfig[1], camConfig[2], camConfig[3], camConfig[4], camConfig[5], camConfig[6], camConfig[7]
-
-    SetCamActiveWithInterp(gCamera, gInterpCamera, 1200, 1, 1);
-
-    gInterpCamera = CreateCam("DEFAULT_SCRIPTED_CAMERA", true);       
-    SetCamRot(gInterpCamera, pitch, roll, yaw, 0);
-    SetCamActive(gInterpCamera, true);
-    SetCamFov(gInterpCamera, fov);
-
-    if gIsCamInterpolating then
-        local pedHandle = gPeds[gPedsSelectedPedIndex];
-
-        AttachCamToEntity(gInterpCamera, pedHandle, -1.0, 0.0, 0.5,false)
-        SetCamActiveWithInterp(gInterpCamera, gCamera, 1000, 1, 1);
-
-        gIsCamInterpolating = false;
-    else 
-        SetCamCoord(gInterpCamera, x, y, z);
-        if camIndex == 2 then
-            SetCamActiveWithInterp(gInterpCamera, gCamera, 5000, 1.0, 1.0);
-        else
-            SetCamActiveWithInterp(gInterpCamera, gCamera, 1000, 1.0, 1.0);
-        end
-    end
-end
-
-function release()
-
-    if gPeds ~= nil then
-        local pedHandle = gPeds[gPedsSelectedPedIndex] 
-        
-        Citizen.InvokeNative(0xE952D6431689AD9A, pedHandle, PlayerPedId())
-
-        for i = 1, #gPeds do
-            DeleteEntity(gPeds[i])
-        end
-
-        gPeds = nil
+        return alert == 'confirm'
     end
 
-    if gImaps ~= nil then
-        for i = 1, #gImaps do
-            RemoveImap(gImaps[i])
-        end
+    local function onUndo(personaData)
+        Game.Stop();
+        SpawnSelector.Start()
+        return true
     end
 
-    gImaps = nil
+    local equippedMetapedClothing = Appearance.Start(ped, nil, onConfirm, onBeforeUndo, onUndo)
 
-    gState = nil
+    equippedMetapedClothing.bodyApparatusId = 0;
+    equippedMetapedClothing.bodyApparatusStyleId = 0;
 
-    local playerPed = PlayerPedId()
+    equippedMetapedClothing.isMale = IsPedMale(ped);
 
-    SetFocusEntity(playerPed)
-    SetEntityInvincible(playerPed, false)
-    SetEntityVisible(playerPed, true)
-    NetworkSetEntityInvisibleToNetwork(playerPed, false)
+    equippedMetapedClothing.whistleShape = 0.0;
+    equippedMetapedClothing.whistlePitch = 0.0;
+    equippedMetapedClothing.whistleClarity = 0.0;
+    equippedMetapedClothing.height = 180;
+
+    equippedMetapedClothing.bodyWeightOufitType = 10;
+
+    equippedMetapedClothing.bodyKindType = 1;
+
+    Game.equippedMetapedClothing = equippedMetapedClothing;
     
-    CreationMode = false
+    
+    -- print(" START :: equippedMetapedClothing , ", json.encode(equippedMetapedClothing))
 
-    DestroyAllCams(true)
+    -- local started, editor = exports["frp_appearance"]:Start(gscPersonaEditor, ped, function(status)
+    --     local success = Game.RequestCreatePersona(Game.equippedMetapedClothing);
 
-    local str = Citizen.InvokeNative(0xFA925AC00EB830B9, 10, "LITERAL_STRING", " ", Citizen.ResultAsLong())                    
-    Citizen.InvokeNative(0xFA233F8FE190514C, str)
-    Citizen.InvokeNative(0xE9990552DEC71600)
+    --     if success then
+    --         --- RETORNAR Criação de personagem
+    --         Game.Stop();
+    --     end
+
+    --     return success;
+    -- end)
+
+    -- local equippedMetapedClothing = equippedMetapedClothing;
+    -- local equippedMetapedClothing = Game.GetEquippedMetapedClothing();
+
+    -- Valores padrões para o editor de persona
+    -- TODO: Melhorar isso!
+
+    -- Game.Editor = editor;
 end
 
-RegisterNetEvent("FRP:CHARCREATION:starting")
-AddEventHandler("FRP:CHARCREATION:starting", function()    
-    DoScreenFadeOut(500)
-    
-    while IsScreenFadedOut() do 
-        Wait(100)
-    end
+Game.Scene.RotateCustomizationPed = function(rotateLeft)
+    local toAddAngle = rotateLeft and -45.0 or 45.0;
 
-    Wait(1100)
-    request()
-end)
+    local lineupGenderStr = Game.Scene.focusedLineupGender == eLineupGender.Female and 'female' or 'male';
+    local lineupPed = Game.Scene.lineupPedMap[lineupGenderStr];
 
-AddEventHandler("onResourceStop", function(resourceName)
-    if resourceName == GetCurrentResourceName() or resourceName == "frp_core" then
-        release()
+    local newHeading = Game.Utils.WrapAngle(lineupPed.getHeading() + toAddAngle);
+
+    TaskAchieveHeading(lineupPed, newHeading, 0);
+end
+
+Game.Scene.SetPedDefaultOutfit = function(ped)
+
+    Game.Utils.FixStuckAmmoClothingPiece(ped)
+    local isMale = IsPedMale(ped)
+
+    local metapedGender = isMale and eMetapedBodyApparatusGender.Male or eMetapedBodyApparatusGender.Female;
+
+    local defaultOutfit = Config.PedsInitialSettings[metapedGender];
+
+    for _, outfit in pairs(defaultOutfit) do
+        local  type, id, styleId = outfit.type, outfit.id, outfit.styleId
+
+        if id <= -1 then
+            Appearance.clothingSystemPushRequest(ped, "RemoveCurrentApparatusByType", type);
+            return
+        end
+
+        Appearance.clothingSystemPushRequest(ped, "UpdateCurrentApparatus",
+        {
+            apparatusId =  id,
+            apparatusStyleId = styleId,
+            apparatusType =  type,
+        });
     end
-end)
+end
