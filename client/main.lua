@@ -51,6 +51,8 @@ Game.Stop = function()
     Game.Start = false
     Game.Inputs.enabled = false
 
+    Appearance.Stop()
+
     for _, ipl in pairs(Game.Scene.iplsLoaded) do 
         RemoveImap(ipl);
     end
@@ -87,8 +89,6 @@ Game.Stop = function()
 
     DisplayHud(false)
     DisplayRadar(false)
-
-    Appearance.OnStop()
 end
 
 CreateThread(function()

@@ -241,6 +241,7 @@ Game.Scene.CreateStartToCustomizationTransition = function(ped)
 
         if success then
             --- RETORNAR Criação de personagem
+            SpawnSelector.Start();
             Game.Stop();
         end
         return true
