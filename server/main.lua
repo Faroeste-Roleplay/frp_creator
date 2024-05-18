@@ -83,3 +83,17 @@ lib.callback.register('PersonaEditor.RequestCreatePersona', function(source, req
     return charId ~= nil
 end)
 
+RegisterNetEvent("net.personaCreatorHandlerRemovePlayerRoutingBucket", function()
+    local playerId = source
+    SetPlayerRoutingBucket(playerId, 0)
+end)
+
+RegisterNetEvent("net.personaCreatorHandlerSetPlayerRoutingBucket", function()
+    local playerId = source
+    SetPlayerRoutingBucket(playerId, tonumber(playerId))
+end)
+
+RegisterNetEvent("net.personaCreatorHandlerSetRoutingBucket", function(entityId)
+    local playerId = source
+    SetEntityRoutingBucket(NetworkGetEntityFromNetworkId(entityId), tonumber(playerId))
+end)
