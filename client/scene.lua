@@ -72,6 +72,10 @@ Game.Scene.CreateLineupPed = function(lineupGender, pedModelHash)
 
     local pedId = CreatePed(pedModelHash, pedConfig.x, pedConfig.y, pedConfig.z, pedConfig.heading, true, false, false, false);
 
+    while NetworkGetNetworkIdFromEntity(pedId) == 0 do
+        Wait(1)
+    end 
+
     TriggerServerEvent('net.personaCreatorHandlerSetRoutingBucket', NetworkGetNetworkIdFromEntity(pedId))
 
     SetPedRandomComponentVariation(pedId, 1);
@@ -261,8 +265,8 @@ Game.Scene.CreateStartToCustomizationTransition = function(ped)
 
     local equippedMetapedClothing = Appearance.Start(ped, nil, onConfirm, onBeforeUndo, onUndo)
 
-    equippedMetapedClothing.bodyApparatusId = 0;
-    equippedMetapedClothing.bodyApparatusStyleId = 0;
+    equippedMetapedClothing.bodyApparatusId = 1;
+    equippedMetapedClothing.bodyApparatusStyleId = 1;
 
     equippedMetapedClothing.isMale = IsPedMale(ped);
 

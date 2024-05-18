@@ -137,7 +137,7 @@ Game.RequestCreatePersona = function (equippedMetapedClothing)
     playerData.lastName = input[2]
     playerData.birthDate = input[3]
 
-    playerData.isMale = IsPedMale(Game.Ped)
+    playerData.isMale = IsPedMale(Game.Scene._customizationCurrentPed)
     
     local request = lib.callback.await("PersonaEditor.RequestCreatePersona", false, playerData)
     return request
