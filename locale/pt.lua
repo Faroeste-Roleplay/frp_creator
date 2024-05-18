@@ -1,4 +1,8 @@
 i18n.importData("pt", {
+    info = {
+        cancel_appearance = "Fechar e cancelar?",
+        have_sure = "Tem certeza que deseja cancelar?"
+    },
     error = {
         do_not_have_permission = "Para criar um novo personagem deve adquirir em faroesterp.com",
         error_setup_name = "O %s Não foi aceito"

@@ -242,11 +242,19 @@ Game.Scene.CreateStartToCustomizationTransition = function(ped)
         return true
     end
     
-    local function onBeforeUndo(personaData)
-        Game.Stop();
-        return true
+    local function onBeforeUndo()
+        local alert = lib.alertDialog({
+            header = i18n.translate("info.cancel_appearance"),
+            content = i18n.translate("info.have_sure"),
+            centered = true,
+            cancel = true
+        })
+
+        return alert == 'confirm'
     end
+
     local function onUndo(personaData)
+        Game.Stop();
         SpawnSelector.Start()
         return true
     end
