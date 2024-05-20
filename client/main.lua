@@ -120,9 +120,9 @@ Game.RequestCreatePersona = function (equippedMetapedClothing)
 
     ::setupName::
     local inputData = {
-        { type = "input", label = i18n.translate('general.name'),        placeholder = "Mack" },
-        { type = "input", label = i18n.translate('general.lastname'),    placeholder = "Miller" },
-        { type = "date", label = i18n.translate('general.birthdate') },
+        { type = "input", label = i18n.translate('general.name'),        placeholder = "Mack", required = true },
+        { type = "input", label = i18n.translate('general.lastname'),    placeholder = "Miller", required = true },
+        { type = "date", label = i18n.translate('general.birthdate'), format = "DD/MM/YYYY", required = true, min = '01/01/1700', max = '01/01/1882', default = '01/01/1880' },
     }
 
     local input = lib.inputDialog(i18n.translate('general.personaCreator'), inputData)
@@ -137,8 +137,10 @@ Game.RequestCreatePersona = function (equippedMetapedClothing)
     playerData.lastName = input[2]
     playerData.birthDate = input[3]
 
-    playerData.isMale = IsPedMale(Game.Scene._customizationCurrentPed)
-    
+    if playerData.isMale == nil then
+        playerData.isMale = IsPedMale(Game.Scene._customizationCurrentPed) == 1
+    end
+
     local request = lib.callback.await("PersonaEditor.RequestCreatePersona", false, playerData)
     return request
 end
