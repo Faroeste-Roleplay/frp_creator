@@ -62,8 +62,6 @@ lib.callback.register('PersonaEditor.RequestCreatePersona', function(source, req
 
         mustacheApparatusId = mustacheApparatusId,
         mustacheApparatusStyleId = mustacheApparatusStyleId,
-
-        weightPercentage = appearance.bodyWeightOufitType,
     }
 
     local appearanceOverlays = exports.frp_creator:formatOverlaysToSave(request?.overlayLayersMap)
