@@ -241,7 +241,8 @@ Game.Scene.CreateStartToCustomizationTransition = function(ped)
 
         if success then
             --- RETORNAR Criação de personagem
-            SpawnSelector.Start();
+            -- SpawnSelector.Start();
+            TriggerServerEvent("FRP:spawnSelector:DisplayCharSelection")
             Game.Stop();
         end
         return true
