@@ -2,7 +2,9 @@ local Tunnel = module("frp_lib", "lib/Tunnel")
 local Proxy = module("frp_lib", "lib/Proxy")
 
 API = Proxy.getInterface("API")
+VirtualWorld = Proxy.getInterface("virtual_world")
 cAPI = Tunnel.getInterface("API")
+
 
 lib.callback.register('PersonaEditor.RequestCreatePersona', function(source, request)
     local User = API.GetUserFromSource(source)
@@ -83,12 +85,12 @@ end)
 
 RegisterNetEvent("net.personaCreatorHandlerRemovePlayerRoutingBucket", function()
     local playerId = source
-    SetPlayerRoutingBucket(playerId, 0)
+    VirtualWorld:AddPlayerToGlobalWorld( playerId )
 end)
 
 RegisterNetEvent("net.personaCreatorHandlerSetPlayerRoutingBucket", function()
     local playerId = source
-    SetPlayerRoutingBucket(playerId, tonumber(playerId))
+    VirtualWorld:AddPlayerOnVirtualWorld( playerId, tonumber(playerId) )
 end)
 
 RegisterNetEvent("net.personaCreatorHandlerSetRoutingBucket", function(entityId)
