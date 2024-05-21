@@ -2,7 +2,6 @@ local Tunnel = module("frp_lib", "lib/Tunnel")
 local Proxy = module("frp_lib", "lib/Proxy")
 
 API = Proxy.getInterface("API")
-VirtualWorld = Proxy.getInterface("virtual_world")
 cAPI = Tunnel.getInterface("API")
 
 
