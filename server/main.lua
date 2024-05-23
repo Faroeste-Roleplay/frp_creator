@@ -12,6 +12,22 @@ lib.callback.register('PersonaEditor.RequestCreatePersona', function(source, req
         return
     end
 
+    local userMaxSlots = User.numMaxSlots
+    local characters = User:GetCharacters()
+
+    if not characters then
+        goto continue
+    end
+
+    local canCreateCharacter = #characters >= userMaxSlots
+
+    if not canCreateCharacter then
+        User:Notify("error", i18n.translate('error.do_not_have_permission'), 5000)
+        return
+    end
+
+    ::continue::
+
     local equippedApparelsByType = request.equippedApparelsByType
 
     local headApparatusId = equippedApparelsByType[eMetapedBodyApparatusType.Heads]?.id
