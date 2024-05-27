@@ -4,6 +4,8 @@ local Proxy = module("frp_lib", "lib/Proxy")
 API = Proxy.getInterface("API")
 cAPI = Tunnel.getInterface("API")
 
+VirtualWorld = Proxy.getInterface("virtual_world")
+
 
 lib.callback.register('PersonaEditor.RequestCreatePersona', function(source, request)
     local User = API.GetUserFromSource(source)
