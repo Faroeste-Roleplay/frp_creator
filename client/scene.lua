@@ -172,18 +172,22 @@ Game.Scene.CreateInputHandlers = function()
     -- onLeftArrowPressed()
     -- onEnterPressed()
 
-    return { onRightArrowPressed, onLeftArrowPressed, onEnterPressed}
+    return { onRightArrowPressed, onLeftArrowPressed, onEnterPressed }
 end
 
 Game.Scene.CreateStartToCustomizationTransition = function(ped)
     local animScene = CreateAnimScene('script@mp@character_creator@transitions', 0, 0, false, true);
+
+    -- print(" CreateStartToCustomizationTransition :: ")
 
     LoadAnimScene(animScene);
 
     Game.Scene._customizationCurrentPed = ped
     -- Aguardar o animScene carregar...
     -- IsAnimSceneLoaded
-    while not N_0x477122b8d05e7968(animScene, true,  false) do
+
+    while N_0x477122b8d05e7968(animScene, true,  false) == 0 do
+        LoadAnimScene(animScene);
         Wait(0);
     end
 
@@ -235,8 +239,6 @@ Game.Scene.CreateStartToCustomizationTransition = function(ped)
     -- Game.equippedMetapedClothing = equippedMetapedClothing
 
     local function onConfirm(personaData)
-        print(" onConfirm :: ", json.encode(personaData ,{indent=true}))
-
         local success = Game.RequestCreatePersona(personaData);
 
         if success then
