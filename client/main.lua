@@ -42,6 +42,8 @@ Game.Init = function ()
     Game.state = ePersonaCreationState.Selecting
 
     Game.Scene.CreateInputHandlers()
+    
+    Game.Scene.TipInput()
 
     Game.Start = true
 end

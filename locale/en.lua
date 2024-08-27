@@ -1,7 +1,8 @@
 i18n.importData("en", {
     info = {
         cancel_appearance = "Close and cancel appearance change",
-        have_sure = "Do you have a sure?"
+        have_sure = "Do you have a sure?",
+        tip = "~INPUT_FRONTEND_LEFT~ or ~INPUT_FRONTEND_RIGHT~ to switch - ~INPUT_FRONTEND_ACCEPT~ to confirm"
     },
     error = {
         do_not_have_permission = "Para criar um novo personagem deve comprar em faroesterp.com",

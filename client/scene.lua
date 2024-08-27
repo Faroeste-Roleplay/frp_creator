@@ -281,7 +281,8 @@ Game.Scene.CreateStartToCustomizationTransition = function(ped)
 
     equippedMetapedClothing.bodyWeightOufitType = 10;
 
-    equippedMetapedClothing.bodyKindType = 1;
+    local offset = IsPedMale(ped) and 132 or 114;
+    equippedMetapedClothing.bodyKindType = offset;
 
     Game.equippedMetapedClothing = equippedMetapedClothing;
     
@@ -343,4 +344,19 @@ Game.Scene.SetPedDefaultOutfit = function(ped)
             apparatusType =  type,
         });
     end
+end
+
+Game.Scene.TipInput = function()
+    CreateThread(function()
+        while Game.state == ePersonaCreationState.Selecting do 
+
+            Game.Utils.DisplayHelpText(i18n.translate('info.tip'))
+            
+            if not Game.Start then
+                break
+            end
+            
+            Wait(0)
+        end
+    end)
 end
