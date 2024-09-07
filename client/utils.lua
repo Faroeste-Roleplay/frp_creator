@@ -1,6 +1,13 @@
 Game.Utils = {}
 
 
+Game.Utils.DisplayHelpText = function(helpText)
+    local str = Citizen.InvokeNative(0xFA925AC00EB830B9, 10, "LITERAL_STRING", helpText, Citizen.ResultAsLong())
+    SetTextScale(0.25, 0.25)
+    SetTextCentre(1)
+    Citizen.InvokeNative(0xFA233F8FE190514C, str)
+    Citizen.InvokeNative(0xE9990552DEC71600)
+end
 
 Game.Utils.WrapAngle = function(angle)
     -- reduce the angle  
