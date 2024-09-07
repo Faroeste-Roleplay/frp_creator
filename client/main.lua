@@ -45,6 +45,9 @@ Game.Init = function ()
     
     Game.Scene.TipInput()
 
+    -- DisplayHud(false)
+    DisplayRadar(false)
+
     Game.Start = true
 end
 
@@ -89,8 +92,8 @@ Game.Stop = function()
 
     ClearFocus()
 
-    DisplayHud(false)
-    DisplayRadar(false)
+    -- DisplayHud(true)
+    DisplayRadar(true)
 end
 
 CreateThread(function()
