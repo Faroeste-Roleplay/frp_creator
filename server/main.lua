@@ -14,7 +14,7 @@ lib.callback.register('PersonaEditor.RequestCreatePersona', function(source, req
         return
     end
 
-    local userMaxSlots = User.numMaxSlots
+    local userMaxSlots = User:GetMaxCharSlotsAvailable()
     local characters = User:GetCharacters()
 
     if characters then
@@ -93,7 +93,7 @@ lib.callback.register('PersonaEditor.RequestCreatePersona', function(source, req
 
     local charId = User:CreateCharacter(request.firstName, request.lastName, request.birthDate, characterNode, equippedApparelsByType)
 
-    return charId ~= nil
+    return charId
 end)
 
 RegisterNetEvent("net.personaCreatorHandlerRemovePlayerRoutingBucket", function()
