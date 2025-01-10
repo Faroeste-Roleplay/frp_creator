@@ -239,13 +239,19 @@ Game.Scene.CreateStartToCustomizationTransition = function(ped)
     -- Game.equippedMetapedClothing = equippedMetapedClothing
 
     local function onConfirm(personaData)
-        local success = Game.RequestCreatePersona(personaData);
+        local charId = Game.RequestCreatePersona(personaData);
 
-        if success then
+        if charId ~= nil then
             --- RETORNAR Criação de personagem
             -- SpawnSelector.Start();
-            TriggerServerEvent("FRP:spawnSelector:DisplayCharSelection")
+            -- TriggerServerEvent("FRP:spawnSelector:DisplayCharSelection")
+            TriggerServerEvent("FRP:spawnSelector:selectCharacterWithDefaultCoords", charId)
+
+            Wait(1000)
+
             Game.Stop();
+
+            FreezeEntityPosition( PlayerPedId(), true )
         end
         return true
     end
