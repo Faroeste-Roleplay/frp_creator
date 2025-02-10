@@ -17,6 +17,8 @@ lib.callback.register('PersonaEditor.RequestCreatePersona', function(source, req
     local userMaxSlots = User:GetMaxCharSlotsAvailable()
     local characters = User:GetCharacters()
 
+    local birtDate = request.birthDate
+
     if characters then
         local canCreateCharacter = #characters >= userMaxSlots
 
@@ -91,7 +93,14 @@ lib.callback.register('PersonaEditor.RequestCreatePersona', function(source, req
         overlaysCustomizable = appearanceOverlays.appearanceOverlaysCustomizable
     }
 
-    local charId = User:CreateCharacter(request.firstName, request.lastName, request.birthDate, characterNode, equippedApparelsByType)
+    local metadata = {
+        mothername = request.mothername,
+        fathername = request.fathername,
+        borncity = request.borncity,
+        naturalness = request.naturalness,
+    }
+
+    local charId = User:CreateCharacter(request.firstName, request.lastName, request.birthDate, characterNode, equippedApparelsByType, metadata)
 
     return charId
 end)
@@ -110,3 +119,8 @@ RegisterNetEvent("net.personaCreatorHandlerSetRoutingBucket", function(entityId)
     local playerId = source
     SetEntityRoutingBucket(NetworkGetEntityFromNetworkId(entityId), tonumber(playerId))
 end)
+
+-- function convertToSQLDate(dateStr)
+--     local day, month, year = dateStr:match("(%d%d)/(%d%d)/(%d%d%d%d)")  -- Extrai os componentes
+--     return string.format("%d-%02d-%02d", year, tonumber(month), tonumber(day))  -- Retorna no formato correto
+-- end

@@ -16,6 +16,11 @@ i18n.importData("es", {
         gender = "Gender",
         man = "man",
         woman = "woman",
-        birthdate = "Birthdate"
+        birthdate = "Birthdate",
+        mothername = "Nome da mãe",
+        fathername = "Nome do pai",
+        borncity = "Cidade de Origem",
+        naturalness = "Naturalidade",
+        currentyear= "O ano atual é 1900",
     },
 })

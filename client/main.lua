@@ -45,7 +45,7 @@ Game.Init = function ()
     
     Game.Scene.TipInput()
 
-    -- DisplayHud(false)
+    DisplayHud(true)
     DisplayRadar(false)
 
     Game.Start = true
@@ -92,7 +92,7 @@ Game.Stop = function()
 
     ClearFocus()
 
-    -- DisplayHud(true)
+    -- DisplayHud(false)
     DisplayRadar(true)
 end
 
@@ -127,7 +127,11 @@ Game.RequestCreatePersona = function (equippedMetapedClothing)
     local inputData = {
         { type = "input", label = i18n.translate('general.name'),        placeholder = "Mack", required = true },
         { type = "input", label = i18n.translate('general.lastname'),    placeholder = "Miller", required = true },
-        { type = "date", label = i18n.translate('general.birthdate'), format = "DD/MM/YYYY", required = true, min = '01/01/1700', max = '01/01/1882', default = '01/01/1880' },
+        { type = "date", label = i18n.translate('general.birthdate'), description = i18n.translate("general.currentyear"), format = "DD/MM/YYYY", required = true, min = '01/01/1700', max = '01/01/1882', default = '01/01/1880' },
+        { type = 'input', label = i18n.translate('general.mothername'), required = true, min = 4 },
+        { type = 'input', label = i18n.translate('general.fathername'), required = true, min = 4 },
+        { type = 'input', label = i18n.translate('general.borncity'), required = true, min = 4},
+        { type = 'input', label = i18n.translate('general.naturalness'), required = true, min = 4 },
     }
 
     local input = lib.inputDialog(i18n.translate('general.personaCreator'), inputData)
@@ -141,6 +145,11 @@ Game.RequestCreatePersona = function (equippedMetapedClothing)
     playerData.firstName = input[1]
     playerData.lastName = input[2]
     playerData.birthDate = input[3]
+
+    playerData.mothername = input[4]
+    playerData.fathername = input[5]
+    playerData.borncity = input[6]
+    playerData.naturalness = input[7]
 
     if playerData.isMale == nil then
         playerData.isMale = IsPedMale(Game.Scene._customizationCurrentPed) == 1
