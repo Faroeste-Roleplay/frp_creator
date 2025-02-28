@@ -1,30 +1,30 @@
 i18n.importData("en", {
     info = {
         cancel_appearance = "Close and cancel appearance change",
-        have_sure = "Do you have a sure?",
+        have_sure = "Are you sure?",
         tip = "~INPUT_FRONTEND_LEFT~ or ~INPUT_FRONTEND_RIGHT~ to switch - ~INPUT_FRONTEND_ACCEPT~ to confirm"
     },
     error = {
-        do_not_have_permission = "Para criar um novo personagem deve comprar em faroesterp.com",
-        error_setup_name = "O %s Não foi aceito"
+        do_not_have_permission = "To create a new character, you must purchase at faroesterp.com",
+        error_setup_name = "%s was not accepted"
     },
     button = {
-        create = 'Criar',
-        select = 'Selecionar'
+        create = 'Create',
+        select = 'Select'
     },
     general = {
-        name = "Nome",
-        lastname = "Sobrenome",
-        class = "Classe",
-        personaCreator = 'Criação de Personagem',
-        gender = "Gênero",
-        man = "Homem",
-        woman = "Mulher",
-        birthdate = "Data de Nascimento",
-        mothername = "Mother name",
-        fathername = "Father name",
-        borncity = "Born city",
+        name = "Name",
+        lastname = "Last name",
+        class = "Class",
+        personaCreator = 'Character Creation',
+        gender = "Gender",
+        man = "Man",
+        woman = "Woman",
+        birthdate = "Date of Birth",
+        mothername = "Mother's name",
+        fathername = "Father's name",
+        borncity = "Birth city",
         naturalness = "Naturalness",
-        currentyear= "O ano atual é 1900",
+        currentyear= "The current year is 1900",
     },
 })
