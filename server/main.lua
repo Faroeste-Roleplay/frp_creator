@@ -20,9 +20,9 @@ lib.callback.register('PersonaEditor.RequestCreatePersona', function(source, req
     local birtDate = request.birthDate
 
     if characters then
-        local canCreateCharacter = #characters >= userMaxSlots
+        local cannotCreateCharacter = #characters >= userMaxSlots
 
-        if not canCreateCharacter then
+        if cannotCreateCharacter then
             User:Notify("error", i18n.translate('error.do_not_have_permission'), 5000)
             return
         end

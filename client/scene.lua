@@ -232,7 +232,7 @@ Game.Scene.CreateStartToCustomizationTransition = function(ped)
 
     FreezeEntityPosition(ped, false)
 
-    Wait(2000)
+    Wait(3000)
 -- 
     -- local equippedMetapedClothing = exports.frp_lib:handleStartEditor(ped)
     -- print(" INICIOU :: ", json.encode(equippedMetapedClothing))
@@ -269,7 +269,7 @@ Game.Scene.CreateStartToCustomizationTransition = function(ped)
 
     local function onUndo(personaData)
         Game.Stop();
-        SpawnSelector.Start()
+        TriggerServerEvent("FRP:spawnSelector:DisplayCharSelection")
         return true
     end
 
